@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seelam Dwarakanadh | Full Stack Developer</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Space+Grotesk:wght@300;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@600&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           1. ROOT VARIABLES & GLOBAL RESET
+           ========================================= */
+        :root {
+            /* Palette */
+            --bg-dark: #050510;        
+            --bg-card: rgba(255, 255, 255, 0.05);
+            
+            --text-main: #ffffff;      
+            --text-sec: #d1d5db;        
+            
+            --neon-blue: #00f2ff;      
+            --neon-purple: #bc13fe;    
+            
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --font-main: 'Outfit', sans-serif;
+            --font-head: 'Space Grotesk', sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            position: relative;
+            cursor: none; /* Hide default cursor */
+        }
+
+        /* Smooth Scrolling */
+        html { scroll-behavior: smooth; }
+
+        h1, h2, h3, h4, h5 {
+            font-family: var(--font-head);
+            color: var(--text-main);
+            letter-spacing: 0.5px;
+        }
+
+        /* =========================================
+           2. SECTION HEADING STYLING
+           ========================================= */
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            display: inline-block;
+            position: relative;
+            background: linear-gradient(90deg, #fff, var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 5px rgba(0, 242, 255, 0.3));
+        }
+
+        .section-title::after {
+            content: ''; position: absolute; width: 40%; height: 3px;
+            bottom: -10px; left: 0; background: var(--neon-purple);
+            border-radius: 2px; box-shadow: 0 0 10px var(--neon-purple);
+            transition: width 0.3s ease;
+        }
+
+        .section-title:hover::after { width: 100%; }
+
+        /* =========================================
+           3. CUSTOM SCROLLBAR & CURSOR
+           ========================================= */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { 
+            background: linear-gradient(var(--neon-purple), var(--neon-blue)); 
+            border-radius: 5px; 
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--neon-blue); }
+
+        .cursor-dot {
+            width: 8px; height: 8px; background-color: var(--neon-blue);
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; z-index: 9999; pointer-events: none;
+        }
+
+        .cursor-outline {
+            width: 40px; height: 40px; border: 2px solid var(--neon-purple);
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; z-index: 9999; pointer-events: none;
+            transition: all 0.1s ease;
+        }
+
+        /* =========================================
+           4. BACKGROUND ANIMATIONS
+           ========================================= */
+        .bg-animation {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; overflow: hidden; background: var(--bg-dark);
+        }
+
+        .orb {
+            position: absolute; border-radius: 50%;
+            filter: blur(100px); opacity: 0.4;
+            animation: floatOrb 15s infinite alternate ease-in-out;
+        }
+
+        .orb-1 { width: 400px; height: 400px; background: var(--neon-purple); top: -100px; left: -100px; }
+        .orb-2 { width: 300px; height: 300px; background: var(--neon-blue); bottom: -50px; right: -50px; animation-duration: 20s; animation-delay: -5s; }
+        .orb-3 { width: 200px; height: 200px; background: #390099; top: 40%; left: 60%; animation-duration: 18s; animation-delay: -10s; opacity: 0.3; }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 50px) scale(1.1); }
+        }
+
+        /* =========================================
+           5. HERO NAME ANIMATION
+           ========================================= */
+        .hero-name {
+            font-size: clamp(2rem, 6vw, 5rem); font-weight: 800; line-height: 1.1; 
+            margin-bottom: 1rem; min-height: 1.2em; white-space: nowrap; text-align: left;
+        }
+
+        .letter-reveal {
+            display: inline-block; opacity: 0;
+            animation: neonTypeLoop 6s infinite; 
+            animation-delay: calc(0.1s * var(--i)); 
+        }
+
+        .letter-space { display: inline-block; width: 0.3em; }
+
+        @keyframes neonTypeLoop {
+            0% { opacity: 0; transform: scale(0.8); filter: blur(5px); color: var(--text-sec); }
+            5% { opacity: 1; transform: scale(1); filter: blur(0); color: #fff; text-shadow: 0 0 10px var(--neon-blue); }
+            10% { color: #fff; text-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-purple); }
+            15% { color: #ddd; text-shadow: none; }
+            20% { color: #fff; text-shadow: 0 0 20px var(--neon-blue); }
+            30% { color: #fff; text-shadow: 0 0 30px var(--neon-purple), 0 0 60px var(--neon-blue); }
+            50% { color: #fff; text-shadow: 0 0 10px var(--neon-blue); }
+            60% { color: #fff; text-shadow: 0 0 40px var(--neon-purple); }
+            70% { opacity: 1; transform: scale(1); filter: blur(0); }
+            80% { opacity: 0; transform: scale(1.2); filter: blur(10px); color: var(--neon-blue); }
+            100% { opacity: 0; }
+        }
+
+        /* =========================================
+           6. LOGO ANIMATION (NEW)
+           ========================================= */
+        @keyframes logo-breathe {
+            0%, 100% { 
+                text-shadow: 0 0 10px rgba(188, 19, 254, 0.3), 0 0 20px rgba(0, 242, 255, 0.3);
+                transform: scale(1);
+            }
+            50% { 
+                text-shadow: 0 0 20px rgba(188, 19, 254, 0.8), 0 0 40px rgba(0, 242, 255, 0.6);
+                transform: scale(1.02);
+            }
+        }
+
+        .brand-logo {
+            font-family: var(--font-head);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white !important;
+            letter-spacing: -0.5px;
+            position: relative;
+            animation: logo-breathe 4s infinite ease-in-out; /* Subtle glowing animation */
+        }
+
+        /* =========================================
+           7. NAVBAR COMPONENTS
+           ========================================= */
+        .navbar {
+            background: rgba(5, 5, 16, 0.7); backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 15px 0; transition: 0.4s;
+        }
+
+        .nav-link {
+            color: var(--text-sec) !important; font-weight: 500; margin: 0 10px;
+            transition: 0.3s; position: relative;
+        }
+
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 2px;
+            bottom: 0; left: 50%; background-color: var(--neon-blue);
+            transition: all 0.3s ease-in-out; transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after { width: 100%; }
+        .nav-link:hover { color: white !important; text-shadow: 0 0 10px var(--neon-blue); }
+
+        .navbar-toggler { border: 1px solid var(--neon-blue); }
+        .navbar-toggler i { color: var(--neon-blue); }
+
+        /* =========================================
+           8. HERO SECTION COMPONENTS
+           ========================================= */
+        .hero-section {
+            min-height: 100vh;
+            display: flex; align-items: center; padding-top: 80px;
+        }
+
+        .typewriter span {
+            border-right: 3px solid var(--neon-purple);
+            padding-right: 5px; animation: blink 0.75s step-end infinite;
+        }
+        @keyframes blink { 50% { border-color: transparent; } }
+
+        .profile-box {
+            position: relative; width: 320px; height: 320px; margin: 0 auto;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .profile-img {
+            width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 50px rgba(188, 19, 254, 0.3);
+            position: relative; z-index: 2; transition: 0.5s;
+        }
+
+        .profile-box:hover .profile-img {
+            transform: scale(1.05);
+            box-shadow: 0 0 80px rgba(0, 242, 255, 0.4);
+            border-color: var(--neon-blue);
+        }
+
+        .profile-glow-ring {
+            position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;
+            border-radius: 50%; border: 2px dashed var(--neon-blue);
+            animation: spin 20s linear infinite; z-index: 1;
+        }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* =========================================
+           9. BUTTONS & UI ELEMENTS
+           ========================================= */
+        .btn-neon {
+            background: transparent; color: var(--neon-blue);
+            border: 2px solid var(--neon-blue); padding: 12px 35px;
+            border-radius: 50px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 1px; transition: 0.3s; position: relative; overflow: hidden; z-index: 1;
+        }
+        .btn-neon::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 0%; height: 100%;
+            background: var(--neon-blue); transition: 0.3s; z-index: -1;
+        }
+        .btn-neon:hover::before { width: 100%; }
+        .btn-neon:hover { color: #000; box-shadow: 0 0 20px var(--neon-blue); }
+
+        .btn-neon-fill {
+            background: var(--neon-purple); color: white; border: none;
+            padding: 14px 40px; border-radius: 50px; font-weight: 600; transition: 0.3s;
+        }
+        .btn-neon-fill:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(188, 19, 254, 0.6); color: white; }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(188, 19, 254, 0.4); transform: scale(1); }
+            70% { box-shadow: 0 0 0 15px rgba(188, 19, 254, 0); transform: scale(1.05); }
+            100% { box-shadow: 0 0 0 0 rgba(188, 19, 254, 0); transform: scale(1); }
+        }
+        .btn-hire-anim { animation: pulse-glow 2s infinite; }
+
+        /* =========================================
+           10. GLASS CARDS & TIMELINES
+           ========================================= */
+        .glass-card {
+            background: var(--bg-card); backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: var(--glass-border); border-radius: 15px; padding: 2.5rem;
+            transition: 0.4s; height: 100%;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px); border-color: var(--neon-blue);
+            box-shadow: 0 5px 30px rgba(0, 242, 255, 0.1);
+        }
+
+        .timeline-box { position: relative; padding-left: 30px; margin-bottom: 40px; border-left: 2px solid rgba(255,255,255,0.1); }
+        .timeline-dot { position: absolute; left: -6px; top: 0; width: 10px; height: 10px; background: var(--neon-purple); border-radius: 50%; box-shadow: 0 0 10px var(--neon-purple); transition: 0.3s; }
+        .glass-card:hover + .timeline-dot, .timeline-box:hover .timeline-dot { transform: scale(1.5); background: var(--neon-blue); box-shadow: 0 0 20px var(--neon-blue); }
+
+        .designation-anim { transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: inline-block; }
+        .glass-card:hover .designation-anim { transform: translateX(10px); color: var(--neon-blue) !important; text-shadow: 0 0 8px rgba(0, 242, 255, 0.5); }
+
+        /* =========================================
+           11. SKILLS & EDUCATION
+           ========================================= */
+        .skill-badge {
+            display: inline-block; padding: 10px 20px; margin: 5px;
+            border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);
+            border-radius: 8px; color: var(--text-sec); transition: 0.3s; opacity: 0; 
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
+        .skill-badge:hover { border-color: var(--neon-purple); color: white; background: rgba(188, 19, 254, 0.1); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(188, 19, 254, 0.2); }
+
+        .edu-item { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.08); transition: 0.3s ease; }
+        .edu-item:last-child { border-bottom: none; }
+        .edu-item:hover { padding-left: 10px; background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, transparent 100%); border-left: 3px solid var(--neon-blue); }
+        .edu-year { font-family: var(--font-code); color: var(--neon-purple); font-size: 0.9rem; margin-bottom: 5px; display: block; }
+        .edu-degree { font-size: 1.2rem; font-weight: 700; color: white; margin-bottom: 2px; }
+        .edu-institute { color: var(--text-sec); font-size: 0.95rem; }
+        .score-badge { background: rgba(0, 242, 255, 0.1); color: var(--neon-blue); padding: 5px 12px; border-radius: 20px; font-weight: 600; border: 1px solid rgba(0, 242, 255, 0.2); font-size: 0.9rem; transition: 0.3s; }
+        .edu-item:hover .score-badge { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px var(--neon-blue); }
+
+        /* =========================================
+           12. MEDIA QUERIES (MOBILE FIXES)
+           ========================================= */
+        @media (max-width: 991px) {
+            
+            /* FIX 1: Make Photo come FIRST (top) and Text Second */
+            .hero-section .row {
+                flex-direction: column-reverse; /* Reverses the order of columns */
+            }
+
+            .hero-section { 
+                text-align: center; 
+                padding-top: 110px; 
+                padding-bottom: 60px;
+            }
+            
+            /* FIX 2: Profile Image Centering & Gap Reduction */
+            .profile-box { 
+                margin: 0 auto 1.5rem auto; /* Center horizontally, reduce bottom gap to 1.5rem */
+                width: 220px; 
+                height: 220px; 
+            }
+
+            .hero-name { 
+                font-size: 8vw; 
+                text-align: center; /* Ensure title centers on mobile */
+            }
+
+            /* FIX 3: Buttons Side-by-Side (Paka Paka na) */
+            .hero-btns {
+                flex-direction: row !important; /* Force them to be in a row */
+                flex-wrap: nowrap !important; /* Prevent stacking */
+                justify-content: center !important; /* Center them */
+                gap: 15px !important; /* Space between buttons */
+            }
+            
+            /* Adjust button padding slightly so they fit side-by-side on small screens */
+            .hero-btns .btn {
+                padding: 12px 25px !important;
+                white-space: nowrap;
+                font-size: 0.9rem;
+            }
+
+            .timeline-box { padding-left: 0; border-left: none; padding-top: 20px; border-top: 2px solid rgba(255,255,255,0.1); }
+            .timeline-dot { display: none; }
+            .edu-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .edu-score { text-align: left; margin-top: 5px; }
+            
+            /* Disable custom cursor on mobile for better UX */
+            .cursor-dot, .cursor-outline { display: none; }
+            body { cursor: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
+    <div class="bg-animation">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand brand-logo" href="#">
+                Dwarakanadh<span style="color: var(--neon-blue);">.Dev</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#experience">Experience</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#education">Education</a></li>
+                    <li class="nav-item ms-lg-3">
+                        <a href="#contact" class="btn btn-sm btn-neon" style="padding: 8px 25px; font-size: 0.8rem;">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7" data-aos="fade-right" data-aos-duration="1000">
+                    <h5 style="color: var(--neon-blue); letter-spacing: 2px;">HELLO, I AM</h5>
+                    
+                    <h1 class="hero-name auto-type">Seelam Dwarakanadh</h1>
+                    
+                    <h3 class="typewriter text-white mb-4">
+                        I am a <span style="color: var(--text-sec);">Full Stack Developer</span>
+                    </h3>
+                    <p class="lead text-secondary mb-5" style="max-width: 600px; color: #d1d5db;">
+                        Specialized in building scalable Microservices and Enterprise Applications. 
+                        Currently powering banking solutions at <strong class="text-white">IBM</strong>.
+                    </p>
+                    
+                    <div class="d-flex gap-3 justify-content-lg-start justify-content-center hero-btns">
+                        <a href="#contact" class="btn btn-neon-fill btn-hire-anim">
+                            <i class="fas fa-paper-plane me-2"></i>Hire Me
+                        </a>
+                        
+                        <a href="#experience" class="btn btn-neon">My Work</a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-5 text-center" data-aos="zoom-in" data-aos-duration="1000">
+                    <div class="profile-box">
+                        <div class="profile-glow-ring"></div>
+                        <img src="cherry.png" alt="Profile" class="profile-img">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="py-5">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Professional Experience</h2>
+            
+            <div class="row mb-5" data-aos="fade-up">
+                <div class="col-lg-10 mx-auto">
+                    <div class="timeline-box">
+                        <div class="timeline-dot"></div>
+                        <div class="glass-card">
+                            <div class="d-flex justify-content-between flex-wrap align-items-center mb-3">
+                                <div>
+                                    <h3 class="h4 text-white mb-1 designation-anim">Full Stack Developer <small style="font-size:0.8rem; opacity:0.7;">(Contract)</small></h3>
+                                    <h5 class="text-highlight" style="color: var(--neon-blue); font-weight: 600;">IBM <span class="text-white fw-light">| DBS Bank Client</span></h5>
+                                </div>
+                                <span class="badge bg-dark border border-secondary px-3 py-2">Oct 2025 - Present</span>
+                            </div>
+                            <p class="text-secondary mb-0">
+                                <strong class="text-white">Project: Payments & Utility.</strong><br>
+                                Working on critical payment infrastructure and utility services for DBS Bank, ensuring high availability and secure transaction processing using Java Microservices.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" data-aos="fade-up" data-aos-delay="100">
+                <div class="col-lg-10 mx-auto">
+                    <div class="timeline-box">
+                        <div class="timeline-dot" style="background: var(--neon-blue); box-shadow: 0 0 10px var(--neon-blue);"></div>
+                        <div class="glass-card">
+                            <div class="d-flex justify-content-between flex-wrap align-items-center mb-3">
+                                <div>
+                                    <h3 class="h4 text-white mb-1 designation-anim">Full Stack Developer <small style="font-size:0.8rem; opacity:0.7;">(Java)</small></h3>
+                                    <h5 class="text-highlight" style="color: var(--neon-blue); font-weight: 600;">Intellect Design Arena</h5>
+                                </div>
+                                <span class="badge bg-dark border border-secondary px-3 py-2">Jan 2020 - Oct 2025 (5 Years)</span>
+                            </div>
+                            <p class="text-secondary mb-0">
+                                <strong class="text-white">Project: Trade Finance.</strong><br>
+                                End-to-end development of Trade Finance modules. Migrated legacy monoliths to Spring Boot microservices and optimized database queries for faster reporting.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="skills" class="py-5">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-right">Technical Skills</h2>
+            <div class="glass-card" data-aos="fade-up">
+                <div class="d-flex flex-wrap">
+                    <div class="skill-badge" style="animation-delay: 0.1s;"><i class="fab fa-java text-warning me-2"></i>Java Core & Advanced</div>
+                    <div class="skill-badge" style="animation-delay: 0.2s;"><i class="fas fa-leaf text-success me-2"></i>Spring Boot</div>
+                    <div class="skill-badge" style="animation-delay: 0.3s;"><i class="fas fa-network-wired text-info me-2"></i>Microservices</div>
+                    <div class="skill-badge" style="animation-delay: 0.4s;"><i class="fab fa-html5 text-danger me-2"></i>HTML5 & CSS3</div>
+                    <div class="skill-badge" style="animation-delay: 0.5s;"><i class="fab fa-js text-warning me-2"></i>JavaScript (ES6+)</div>
+                    <div class="skill-badge" style="animation-delay: 0.6s;"><i class="fas fa-database text-secondary me-2"></i>SQL / RDBMS</div>
+                    <div class="skill-badge" style="animation-delay: 0.7s;"><i class="fab fa-bootstrap text-primary me-2"></i>Bootstrap 5</div>
+                    <div class="skill-badge" style="animation-delay: 0.8s;"><i class="fab fa-docker text-primary me-2"></i>Docker</div>
+                    <div class="skill-badge" style="animation-delay: 0.9s;"><i class="fas fa-code-branch text-white me-2"></i>Git / Version Control</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="education" class="py-5">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-right">My Education</h2>
+            
+            <div class="glass-card p-4" data-aos="fade-up">
+                
+                <div class="edu-item">
+                    <div class="d-flex flex-column">
+                        <span class="edu-year">2014 - 2018</span>
+                        <div class="edu-degree">B.Tech <span class="text-secondary fw-normal fs-6">| Computer Science</span></div>
+                        <div class="edu-institute">Mallareddy College, Bhagyanagaram</div>
+                    </div>
+                    <div class="edu-score">
+                        <span class="score-badge">9.1 GPA</span>
+                    </div>
+                </div>
+
+                <div class="edu-item">
+                    <div class="d-flex flex-column">
+                        <span class="edu-year">2012 - 2014</span>
+                        <div class="edu-degree">Intermediate</div>
+                        <div class="edu-institute">Sri Chaithanya Junior College, Guntur</div>
+                    </div>
+                    <div class="edu-score">
+                        <span class="score-badge">79.5%</span>
+                    </div>
+                </div>
+
+                <div class="edu-item">
+                    <div class="d-flex flex-column">
+                        <span class="edu-year">2012</span>
+                        <div class="edu-degree">SSC (10th)</div>
+                        <div class="edu-institute">Oxford School, Dachepalle</div>
+                    </div>
+                    <div class="edu-score">
+                        <span class="score-badge">475 / 600</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-5 my-5">
+        <div class="container text-center">
+            <div class="glass-card mx-auto" style="max-width: 700px;" data-aos="zoom-in">
+                <h2 class="mb-3 text-white">Let's Work Together</h2>
+                <p class="text-secondary mb-5">
+                    I am currently available for new projects and collaborations.
+                    <br>Feel free to reach out!
+                </p>
+                
+                <div class="d-flex flex-column flex-md-row justify-content-center gap-4">
+                    <a href="mailto:seelam93@gmail.com" class="btn btn-outline-light py-3 px-4 rounded-pill border-opacity-25">
+                        <i class="fas fa-envelope text-warning me-2"></i> seelam93@gmail.com
+                    </a>
+                    <a href="tel:+917981569236" class="btn btn-outline-light py-3 px-4 rounded-pill border-opacity-25">
+                        <i class="fas fa-phone-alt text-success me-2"></i> +91 7981569236
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-4 text-center">
+        <p class="mb-0 text-secondary small">
+            &copy; 2025 Seelam Dwarakanadh.
+        </p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // 1. Initialize AOS (Scroll Animation)
+        AOS.init({ duration: 800, once: true });
+        
+        // 2. Sticky Navbar Translucency
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.navbar');
+            if (window.scrollY > 50) nav.style.background = 'rgba(5, 5, 16, 0.95)';
+            else nav.style.background = 'rgba(5, 5, 16, 0.7)';
+        });
+
+        // 3. Custom Cursor Logic
+        const cursorDot = document.querySelector("[data-cursor-dot]");
+        const cursorOutline = document.querySelector("[data-cursor-outline]");
+
+        window.addEventListener("mousemove", function(e) {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            // Dot follows instantly
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            // Outline follows with delay (animation)
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        // 4. Letter-by-Letter Reveal Animation Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.auto-type');
+            
+            elements.forEach(el => {
+                const text = el.innerText.trim(); // Get text and trim whitespace
+                el.innerHTML = ''; // Clear existing text
+                
+                // Split text into characters
+                text.split('').forEach((char, index) => {
+                    const span = document.createElement('span');
+                    
+                    if(char === ' ') {
+                        span.classList.add('letter-space'); // Handle spaces
+                        span.innerHTML = '&nbsp;';
+                        // Spaces also need the index for timing continuity
+                        span.style.setProperty('--i', index); 
+                        span.classList.add('letter-reveal'); 
+                    } else {
+                        span.classList.add('letter-reveal');
+                        span.innerText = char;
+                        // Set CSS Variable index for delay calculation
+                        span.style.setProperty('--i', index);
+                    }
+                    el.appendChild(span);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
